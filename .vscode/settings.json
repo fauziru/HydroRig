@@ -1,0 +1,18 @@
+{
+    "prettier.singleQuote": true,
+    "prettier.trailingComma": "es5",
+    "prettier.semi": false,
+    "vetur.format.defaultFormatter.js": "vscode-typescript",
+    "prettier.eslintIntegration": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[vue]": {
+      "editor.defaultFormatter": "octref.vetur"
+    },
+    "blade.format.enable": true,
+    "[blade]": {
+      "editor.defaultFormatter": "onecentlin.laravel-blade"
+    },
+}
