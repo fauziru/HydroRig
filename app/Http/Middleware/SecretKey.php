@@ -16,14 +16,14 @@ class SecretKey
      */
     public function handle($request, Closure $next)
     {
-      $validator = Validator::make($request->all(), [
-          'secret' => 'required',
-      ]);
+        $validator = Validator::make($request->all(), [
+            'secret' => 'required',
+        ]);
 
-      if ($validator->fails()) {
-          return response()->json(['Secret Key is required']);
-      }
+        if ($validator->fails()) return response()->json(['Secret Key is required']);
 
-      return $next($request);
+        if ($request->secret != 'tes') return response()->json(['Secret Key is not valid']);
+
+        return $next($request);
     }
 }

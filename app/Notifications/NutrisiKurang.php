@@ -11,19 +11,19 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Carbon\Carbon;
 
-class OrderanMasuk extends Notification implements ShouldBroadcast
+class NutrisiKurang extends Notification implements ShouldBroadcast
 {
     use Queueable;
 
-    private $product;
+    private $item;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($product)
+    public function __construct($item)
     {
-        $this->product = $product;
+        $this->item = $item;
     }
 
     /**
@@ -60,8 +60,9 @@ class OrderanMasuk extends Notification implements ShouldBroadcast
     public function toDatabase($notifiable)
     {
         return [
-          'data' => $this->product,
-          'created_at' => Carbon::now()
+            'data' => $this->item['message'],
+            'created_at' => Carbon::now(),
+            'link' => $this->item['link']
         ];
     }
 
@@ -69,8 +70,9 @@ class OrderanMasuk extends Notification implements ShouldBroadcast
     {
         return new BroadcastMessage([
             'payload' => [
-                'data' => $this->product,
-                'created_at' => Carbon::now()
+                'data' => $this->item['message'],
+                'created_at' => Carbon::now(),
+                'link' => $this->item['link']
             ]
         ]);
     }

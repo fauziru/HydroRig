@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers\Api\Auth;
 
@@ -9,16 +9,16 @@ trait IssueTokenTrait{
 
 	public function issueToken(Request $request, $grantType, $scope = "*"){
 
-		  $params = [
+		$params = [
           'grant_type' => $grantType,
           'client_id' => $this->client->id,
-          'client_secret' => $this->client->secret, 
-          'username' => $request->email, 		
+          'client_secret' => $this->client->secret,
+          'username' => $request->email,
           'scope' => $scope
     	];
 
     	$request->request->add($params);
-      
+
     	$proxy = Request::create('api/oauth/token', 'POST');
 
     	return Route::dispatch($proxy);
