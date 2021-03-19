@@ -42,9 +42,15 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('sendNotif', 'Api\OrderController@tesNotif');
         });
 
-        Route::prefix('sensor-nutrisi')->group(function () {
-           Route::get('{sensor}/read/{read}', 'Api\SensorController@store');
+        Route::prefix('sensor')->group(function () {
+            Route::get('all', 'Api\SensorController@index');
+            Route::post('store', 'Api\SensorController@store');
+            Route::post('edit/{sensor}', 'Api\SensorController@put');
+            Route::get('delete/{sensor}', 'Api\SensorController@destroy');
+            Route::get('connect-status/{sensor}', 'Api\SensorController@connectStatus');
         });
+        // reader sensor route
+        Route::get('sensor-nutrisi/{sensor}/read/{read}', 'Api\ReadNutrisiController@store')->middleware('last_read');
     });
 
     // for auth user only

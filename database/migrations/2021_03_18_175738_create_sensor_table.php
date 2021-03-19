@@ -19,6 +19,7 @@ class CreateSensorTable extends Migration
                 $table->string('name_sensor')->nullable();
                 $table->decimal('min_nutrisi', 5)->nullable();
                 $table->boolean('konektivitas')->nullable()->default(false);
+                $table->timestamp('last_read')->nullable();
                 $table->timestamps();
             });
         }
