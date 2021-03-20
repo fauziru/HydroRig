@@ -37,21 +37,9 @@ class NotificationController extends APIBaseController
         return $this->sendResponse($notification);
     }
 
-    public function orderspaginate($page)
+    public function sensorpaginate($page)
     {
-        $notification = Auth()->user()->Notifications()->where('type', 'App\Notifications\OrderanMasuk')->paginate(8, ['*'], 'page', $page);
-        return $this->sendResponse($notification);
-    }
-
-    public function messagespaginate($page)
-    {
-        $notification = Auth()->user()->Notifications()->where('type', 'App\Notifications\MessageMasuk')->paginate(8, ['*'], 'page', $page);
-        return $this->sendResponse($notification);
-    }
-
-    public function reviewspaginate($page)
-    {
-        $notification = Auth()->user()->Notifications()->where('type', 'App\Notifications\ReviewMasuk')->paginate(8, ['*'], 'page', $page);
+        $notification = Auth()->user()->Notifications()->where('type', 'App\Notifications\NutrisiKurang')->paginate(8, ['*'], 'page', $page);
         return $this->sendResponse($notification);
     }
 

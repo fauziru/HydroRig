@@ -17,7 +17,7 @@ class CreateSensorTable extends Migration
             Schema::create('sensor', function (Blueprint $table) {
                 $table->id();
                 $table->string('name_sensor')->nullable();
-                $table->decimal('min_nutrisi', 5)->nullable();
+                $table->decimal('min_nutrisi', 5, 0)->nullable();
                 $table->boolean('konektivitas')->nullable()->default(false);
                 $table->timestamp('last_read')->nullable();
                 $table->timestamps();

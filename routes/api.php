@@ -35,23 +35,23 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('unread', 'Api\NotificationController@index');
             Route::get('readall', 'Api\NotificationController@readall');
             Route::get('all/{page}', 'Api\NotificationController@allpaginate');
-            Route::get('order/{page}', 'Api\NotificationController@orderspaginate');
-            Route::get('message/{page}', 'Api\NotificationController@messagespaginate');
-            Route::get('review/{page}', 'Api\NotificationController@reviewspaginate');
-            Route::get('adminactivity/{page}', 'Api\NotificationController@adminpaginate');
+            Route::get('sensor/{page}', 'Api\NotificationController@sensorpaginate');
+            Route::get('activity/{page}', 'Api\NotificationController@adminpaginate');
             Route::get('sendNotif', 'Api\OrderController@tesNotif');
         });
 
         Route::prefix('sensor')->group(function () {
-            Route::get('all', 'Api\SensorController@index');
-            Route::post('store', 'Api\SensorController@store');
-            Route::post('edit/{sensor}', 'Api\SensorController@put');
-            Route::get('delete/{sensor}', 'Api\SensorController@destroy');
+            Route::get('option', 'Api\SensorController@widget');
+            Route::get('/', 'Api\SensorController@index');
+            Route::post('/', 'Api\SensorController@store');
+            Route::put('/{sensor}', 'Api\SensorController@put');
+            Route::delete('/{sensor}', 'Api\SensorController@destroy');
             Route::get('connect-status/{sensor}', 'Api\SensorController@connectStatus');
         });
         // reader sensor route
-        Route::get('sensor-nutrisi/{sensor}/read/{read}', 'Api\ReadNutrisiController@store')->middleware('last_read');
+        Route::get('sensor-nutrisi/widget/{sensor}', 'Api\ReadNutrisiController@showWidget');
     });
+    Route::get('sensor-nutrisi/{sensor}/read/{read}', 'Api\ReadNutrisiController@store')->middleware('last_read', 'api_key');
 
     // for auth user only
     Route::group(['middleware' => 'auth:api'], function(){

@@ -11,7 +11,7 @@ trait AdminActivityTrait{
     public function sendNotif($message, $link = '/sensor')
     {
         $item = [
-            'message' => Auth::user()->name.' '.$message,
+            'message' => '<span class="primary--text">'.Auth::user()->name.'</span> &mdash; '.$message,
             'link' => $link
         ];
         Notification::send(User::all(), new AdminActivity($item));
