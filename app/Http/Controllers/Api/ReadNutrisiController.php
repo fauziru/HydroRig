@@ -11,6 +11,7 @@ use App\Notifications\NutrisiKurang;
 use Notification;
 use App\Http\Resources\Sensor as SensorResource;
 use App\Events\RealtimeDataSensor;
+use Carbon\Carbon;
 
 class ReadNutrisiController extends APIBaseController
 {
@@ -32,14 +33,14 @@ class ReadNutrisiController extends APIBaseController
 
     public function showWidget(Sensor $sensor)
     {
-        // dd($sensor->readNutrisi);
+        // dd($sensor->readNutrisi[0]->created_at);
         $arrCategories = [];
         $arrSeries = [];
         $sensorData = $sensor;
         $readData = $sensor->readNutrisi;
         foreach ($sensor->readNutrisi as $read){
             array_push($arrSeries, $read->read_nutrisi);
-            array_push($arrCategories, $read->created_at);
+            array_push($arrCategories, Carbon::parse($read->created_at)->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s'));
         }
         $item = [
             'sensor_data' => new SensorResource($sensor),
