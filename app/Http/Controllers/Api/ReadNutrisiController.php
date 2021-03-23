@@ -27,7 +27,7 @@ class ReadNutrisiController extends APIBaseController
         }
         $readSensor = ReadNutrisi::create(['sensor_id' => $sensor->id,'read_nutrisi' => $read]);
         // event update realtime
-        event(new RealtimeDataSensor($readSensor));
+        event(new RealtimeDataSensor($readSensor, $sensor->id));
         return $this->sendResponse($readSensor);
     }
 
@@ -36,9 +36,7 @@ class ReadNutrisiController extends APIBaseController
         // dd($sensor->readNutrisi[0]->created_at);
         $arrCategories = [];
         $arrSeries = [];
-        $sensorData = $sensor;
-        $readData = $sensor->readNutrisi;
-        foreach ($sensor->readNutrisi as $read){
+        foreach ($sensor->readNutrisi->take(50) as $read){
             array_push($arrSeries, $read->read_nutrisi);
             array_push($arrCategories, Carbon::parse($read->created_at)->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s'));
         }

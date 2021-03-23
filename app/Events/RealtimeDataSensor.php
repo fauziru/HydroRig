@@ -15,14 +15,17 @@ class RealtimeDataSensor implements ShouldBroadcast
 
     public $data;
 
+    public $sensorId;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(ReadNutrisi $data)
+    public function __construct(ReadNutrisi $data, $id)
     {
         $this->data = $data;
+        $this->sensorId = $id;
     }
 
     /**
@@ -32,6 +35,6 @@ class RealtimeDataSensor implements ShouldBroadcast
      */
     public function broadcastOn(): Channel
     {
-        return new Channel('read.sensor');
+        return new PrivateChannel('read.sensor.'.$this->sensorId);
     }
 }

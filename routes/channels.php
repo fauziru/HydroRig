@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Broadcast;
      return true;
  });
 
- Broadcast::channel('read.sensor.{id}', function ($sensor, $id) {
-    return (int) $sensor->id === (int) $id;
+ Broadcast::channel('read.sensor.{id}', function ($id) {
+    return true;
 });
 
 Broadcast::channel('App.User.{uuid}', function ($user, $uuid) {
