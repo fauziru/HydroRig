@@ -28,6 +28,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('register', 'Api\Auth\UsersController@register');
 
     Route::middleware(['auth:api'])->group(function () {
+        Broadcast::routes();
         // notification
         // Route::get('unreadnotification', 'Api\NotificationController@index');
         Route::prefix('notification')->group(function () {

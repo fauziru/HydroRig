@@ -10,6 +10,7 @@ use App\User;
 use App\Notifications\NutrisiKurang;
 use Notification;
 use App\Http\Resources\Sensor as SensorResource;
+use App\Events\RealtimeDataSensor;
 
 class ReadNutrisiController extends APIBaseController
 {
@@ -25,6 +26,7 @@ class ReadNutrisiController extends APIBaseController
         }
         $readSensor = ReadNutrisi::create(['sensor_id' => $sensor->id,'read_nutrisi' => $read]);
         // event update realtime
+        event(new RealtimeDataSensor($readSensor));
         return $this->sendResponse($readSensor);
     }
 
