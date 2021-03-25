@@ -47,4 +47,20 @@ class ReadNutrisiController extends APIBaseController
         ];
         return $this->sendResponse($item);
     }
+
+    public function showDetail(Sensor $sensor)
+    {
+        $arrCategories = [];
+        $arrSeries = [];
+        foreach ($sensor->readNutrisi as $read){
+            array_push($arrSeries, $read->read_nutrisi);
+            array_push($arrCategories, Carbon::parse($read->created_at)->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s'));
+        }
+        $item = [
+            'sensor_data' => new SensorResource($sensor),
+            'series_data' => $arrSeries,
+            'categories_data' => $arrCategories
+        ];
+        return $this->sendResponse($item);
+    }
 }

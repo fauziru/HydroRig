@@ -50,7 +50,10 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('connect-status/{sensor}', 'Api\SensorController@connectStatus');
         });
         // reader sensor route
-        Route::get('sensor-nutrisi/widget/{sensor}', 'Api\ReadNutrisiController@showWidget');
+        Route::prefix('sensor-nutrisi')->group(function () {
+            Route::get('detail/{sensor}', 'Api\ReadNutrisiController@showDetail');
+            Route::get('widget/{sensor}', 'Api\ReadNutrisiController@showWidget');
+        });
     });
     Route::get('sensor-nutrisi/{sensor}/read/{read}', 'Api\ReadNutrisiController@store')->middleware('last_read', 'api_key');
 
