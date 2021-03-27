@@ -36,7 +36,7 @@ class ReadNutrisiController extends APIBaseController
         // dd($sensor->readNutrisi[0]->created_at);
         $arrCategories = [];
         $arrSeries = [];
-        foreach ($sensor->readNutrisi->take(50) as $read){
+        foreach ($sensor->readNutrisi->orderBy('created_at', 'desc')->take(50) as $read){
             array_push($arrSeries, $read->read_nutrisi);
             array_push($arrCategories, Carbon::parse($read->created_at)->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s'));
         }
