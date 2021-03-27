@@ -6,6 +6,7 @@ use Closure;
 use Carbon\Carbon;
 use Cache;
 use App\Models\Sensor;
+use App\Models\ReadNutrisi;
 
 class LastSensorRead
 {
@@ -18,8 +19,11 @@ class LastSensorRead
      */
     public function handle($request, Closure $next)
     {
-        // dd($request->route('sensor')['id']);
         $id = $request->route('sensor')['id'];
+        if (!Cache::has('sensor-is-connect-' . $id)) {
+            ReadNutrisi::create(['sensor_id' => $id, 'read_nutrisi' => null]);
+        }
+        // dd($request->route('sensor')['id']);
         $expiresAt = Carbon::now()->addSeconds(10);
         Cache::put('sensor-is-connect-' . $id, true, $expiresAt);
         // last read update
