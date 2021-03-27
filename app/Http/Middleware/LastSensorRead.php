@@ -21,7 +21,9 @@ class LastSensorRead
     {
         $id = $request->route('sensor')['id'];
         if (!Cache::has('sensor-is-connect-' . $id)) {
-            ReadNutrisi::create(['sensor_id' => $id, 'read_nutrisi' => null]);
+            $read = ReadNutrisi::create(['sensor_id' => $id, 'read_nutrisi' => null]);
+            $read->created_at = null;
+            $read->save();
         }
         // dd($request->route('sensor')['id']);
         $expiresAt = Carbon::now()->addSeconds(10);
