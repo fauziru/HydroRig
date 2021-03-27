@@ -12,6 +12,6 @@ class Sensor extends Model
 
     public function readNutrisi()
     {
-        return $this->hasMany('App\Models\ReadNutrisi')->orderBy('created_at', 'asc');
+        return $this->hasMany('App\Models\ReadNutrisi')->orderBy('id', 'desc');
     }
 }
