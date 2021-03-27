@@ -21,8 +21,8 @@ class LastSensorRead
     {
         $id = $request->route('sensor')['id'];
         if (!Cache::has('sensor-is-connect-' . $id)) {
-            $read = ReadNutrisi::create(['sensor_id' => $id, 'read_nutrisi' => null]);
-            $read->created_at = null;
+            $read = ReadNutrisi::create(['sensor_id' => $id, 'read_nutrisi' => 0]);
+            $read->created_at = $request->route('sensor')['last_read'];
             $read->save();
         }
         // dd($request->route('sensor')['id']);
