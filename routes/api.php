@@ -40,7 +40,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('activity/{page}', 'Api\NotificationController@adminpaginate');
             Route::get('sendNotif', 'Api\OrderController@tesNotif');
         });
-
+        // sensor
         Route::prefix('sensor')->group(function () {
             Route::get('option', 'Api\SensorController@widget');
             Route::get('/', 'Api\SensorController@index');
@@ -53,6 +53,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::prefix('sensor-nutrisi')->group(function () {
             Route::get('detail/{sensor}', 'Api\ReadNutrisiController@showDetail');
             Route::get('widget/{sensor}', 'Api\ReadNutrisiController@showWidget');
+        });
+        // user
+        Route::prefix('user')->group(function () {
+            Route::get('/', 'Api\Auth\UsersController@index');
+            Route::get('/{user}', 'Api\Auth\UsersController@show');
         });
     });
     Route::get('sensor-nutrisi/{sensor}/read/{read}', 'Api\ReadNutrisiController@store')->middleware('last_read', 'api_key');
