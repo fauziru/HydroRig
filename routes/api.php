@@ -26,6 +26,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('login', 'Api\Auth\LoginController@login');
     Route::post('refresh', 'Api\Auth\LoginController@refresh');
     Route::post('register', 'Api\Auth\UsersController@register');
+    Route::post('registrasiKey', 'Api\Auth\UsersController@checkRegisterKey');
 
     Route::middleware(['auth:api'])->group(function () {
         Broadcast::routes();
