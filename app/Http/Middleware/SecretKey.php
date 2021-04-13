@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Validator;
+use App\Models\Setting;
 
 class SecretKey
 {
@@ -16,13 +17,14 @@ class SecretKey
      */
     public function handle($request, Closure $next)
     {
+        $settings = Setting::first();
         $validator = Validator::make($request->all(), [
             'secret' => 'required',
         ]);
 
         if ($validator->fails()) return response()->json(['Secret Key is required']);
 
-        if ($request->secret != 'tes') return response()->json(['Secret Key is not valid']);
+        if ($request->secret != $settings->api_key) return response()->json(['Secret Key is not valid']);
 
         return $next($request);
     }

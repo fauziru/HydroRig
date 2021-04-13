@@ -60,7 +60,13 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/', 'Api\Auth\UsersController@index');
             Route::get('/{user}', 'Api\Auth\UsersController@show');
         });
+        // setting
+        Route::prefix('setting')->group(function () {
+            Route::get('/{type}', 'Api\SettingController@show');
+            Route::get('/generate/{type}', 'Api\SettingController@generate');
+        });
     });
+
     Route::get('sensor-nutrisi/{sensor}/read/{read}', 'Api\ReadNutrisiController@store')->middleware('last_read', 'api_key');
 
     // for auth user only
