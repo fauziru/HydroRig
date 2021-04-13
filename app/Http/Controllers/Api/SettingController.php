@@ -25,10 +25,15 @@ class SettingController extends APIBaseController
     public function generate($type)
     {
         $generateAble = [ 'api_key', 'registrasi_key'];
+        $arr = [
+            'api_key' => ['title' => 'Api Key', 'link' => 'apikey'],
+            'registrasi_key' => ['title' => 'Registrasi Key', 'link' => 'registrasikey']
+        ];
         // jika tidak cocok, send error
         if(!in_array($type, $generateAble)) return $this->sendError('Generate gagal', 500);
         $this->settings[$type] = \Illuminate\Support\Str::random(32);
         $this->settings->save();
+        $this->sendNotif('mengenerate kode baru '.$arr[$type]['title'], '/setting'.'/'.$arr[$type]['link']);
         return $this->sendResponse($this->settings[$type]);
     }
 }
