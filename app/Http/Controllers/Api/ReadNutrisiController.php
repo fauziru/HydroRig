@@ -12,6 +12,7 @@ use Notification;
 use App\Http\Resources\Sensor as SensorResource;
 use App\Events\RealtimeDataSensor;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ReadNutrisiController extends APIBaseController
 {
@@ -33,34 +34,42 @@ class ReadNutrisiController extends APIBaseController
 
     public function showWidget(Sensor $sensor)
     {
-        // dd($sensor->readNutrisi[0]->created_at);
-        $arrCategories = [];
-        $arrSeries = [];
-        foreach ($sensor->readNutrisi->take(50) as $read){
-            array_push($arrSeries, $read->read_nutrisi);
-            array_push($arrCategories, Carbon::parse($read->created_at)->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s'));
-        }
-        $item = [
-            'sensor_data' => new SensorResource($sensor),
-            'series_data' => $arrSeries,
-            'categories_data' => $arrCategories
-        ];
-        return $this->sendResponse($item);
+        return $this->sendResponse($this->wrapData($sensor->readNutrisi->take(50), $sensor));
     }
 
-    public function showDetail(Sensor $sensor)
+    public function showDetail(Sensor $sensor, $filter, $from = null, $to = null)
     {
-        $arrCategories = [];
+        $filterArray = ['today' => 1, 'this-week' => 8, 'this-month' => 31, 'date' => 1];
+
+        if (!$filterArray[$filter]) return $this->sendError([], 404);
+
+        $filter === 'date'
+            ? $dataReadSensor = DB::table('read_nutrisi')
+                    ->where('sensor_id', '=', $sensor->id)
+                    ->whereBetween('created_at', [$from, $to])
+                    ->get()
+            : $dataReadSensor = DB::table('read_nutrisi')
+                    ->where('sensor_id', '=', $sensor->id)
+                    ->whereDate('created_at', '>', Carbon::now()->subDays($filterArray[$filter]))
+                    ->get();
+
+        return $this->sendResponse($this->wrapData($dataReadSensor, $sensor));
+    }
+
+    private function wrapData($ReadSensors, $sensor)
+    {
         $arrSeries = [];
-        foreach ($sensor->readNutrisi as $read){
+        $arrCategories = [];
+
+        foreach ($ReadSensors as $read){
             array_push($arrSeries, $read->read_nutrisi);
             array_push($arrCategories, Carbon::parse($read->created_at)->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s'));
         }
-        $item = [
+
+        return $item = [
             'sensor_data' => new SensorResource($sensor),
             'series_data' => $arrSeries,
             'categories_data' => $arrCategories
         ];
-        return $this->sendResponse($item);
     }
 }

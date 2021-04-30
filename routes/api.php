@@ -17,10 +17,6 @@ Route::post('oauth/token', 'Api\Auth\AccessTokenController@issueToken');
 
 Route::group(['prefix' => 'v1'], function () {
 
-    Route::get('tes', function () {
-        return 'get';
-    });
-
     // auth
     Route::get('tes1', 'Api\Auth\UsersController@tes');
     Route::post('login', 'Api\Auth\LoginController@login');
@@ -39,7 +35,6 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('all/{page}', 'Api\NotificationController@allpaginate');
             Route::get('sensor/{page}', 'Api\NotificationController@sensorpaginate');
             Route::get('activity/{page}', 'Api\NotificationController@adminpaginate');
-            Route::get('sendNotif', 'Api\OrderController@tesNotif');
         });
         // sensor
         Route::prefix('sensor')->group(function () {
@@ -52,7 +47,7 @@ Route::group(['prefix' => 'v1'], function () {
         });
         // reader sensor route
         Route::prefix('sensor-nutrisi')->group(function () {
-            Route::get('detail/{sensor}', 'Api\ReadNutrisiController@showDetail');
+            Route::get('detail/{sensor}/{filter}/{from?}/{to?}', 'Api\ReadNutrisiController@showDetail');
             Route::get('widget/{sensor}', 'Api\ReadNutrisiController@showWidget');
         });
         // user
