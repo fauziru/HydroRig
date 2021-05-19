@@ -44,6 +44,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::put('/{sensor}', 'Api\SensorController@put');
             Route::delete('/{sensor}', 'Api\SensorController@destroy');
             Route::get('connect-status/{sensor}', 'Api\SensorController@connectStatus');
+            Route::get('connect-status', 'Api\SensorController@connectStatusAll');
         });
         // reader sensor route
         Route::prefix('sensor-nutrisi')->group(function () {
@@ -54,6 +55,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::prefix('user')->group(function () {
             Route::get('/', 'Api\Auth\UsersController@index');
             Route::get('/{user}', 'Api\Auth\UsersController@show');
+            Route::get('get/count', 'Api\Auth\UsersController@countUser');
         });
         // setting
         Route::prefix('setting')->group(function () {

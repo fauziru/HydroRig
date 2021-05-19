@@ -54,6 +54,18 @@ class SensorController extends APIBaseController
         return $this->sendResponse(['status'=> $status, 'lastRead'=> $lastRead]);
     }
 
+    public function connectStatusAll()
+    {
+        $onlineStatuss = [];
+        $sensors = Sensor::all(['id']);
+        foreach ($sensors as $sensor) array_push($onlineStatuss, Cache::has('sensor-is-connect-' . $sensor->id) ? 1 : 0);
+        $result = [
+            "online" => count(array_filter($onlineStatuss, function($val) {return $val == 1;})),
+            "from" => count($onlineStatuss)
+        ];
+        return $this->sendResponse($result);
+    }
+
     public function widget()
     {
         $sensors = Sensor::select('id', 'name_sensor')->get();

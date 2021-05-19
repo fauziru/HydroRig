@@ -26,7 +26,7 @@ class LastSensorRead
             $read->save();
         }
         // dd($request->route('sensor')['id']);
-        $expiresAt = Carbon::now()->addSeconds(10);
+        $expiresAt = Carbon::now()->addSeconds(60);
         Cache::put('sensor-is-connect-' . $id, true, $expiresAt);
         // last read update
         Sensor::where('id', $id)->update(['last_read' => (new \DateTime())->format("Y-m-d H:i:s")]);

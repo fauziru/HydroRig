@@ -71,4 +71,9 @@ class UsersController extends APIBaseController
         ]);
     }
 
+    public function countUser()
+    {
+        return $this->sendResponse(count(User::all(['id'])));
+    }
+
 }
