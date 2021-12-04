@@ -12,25 +12,25 @@ class UserSeeder extends Seeder
     public function run()
     {
         factory(App\User::class, 1)->create([
-            'name' => 'fauzi',
+            'name_user' => 'fauzi',
             'email' => 'fauzirezaumr@gmail.com',
             'password' => Hash::make('ultah020497'),
             'phone' => '085691207607',
-            'role' => 'admin'
+            'role_id' => 1
         ]);
         factory(App\User::class, 1)->create([
-          'name' => 'tesuser',
+          'name_user' => 'tesuser',
           'email' => 'tes@gmail.com',
           'password' => Hash::make('password'),
           'phone' => '-',
-          'role' => 'admin'
+          'role_id' => 1
         ]);
         factory(App\User::class, 1)->create([
-            'name' => 'msaukat',
+            'name_user' => 'msaukat',
             'email' => 'msaukat@gmail.com',
             'password' => Hash::make('password'),
             'phone' => '-',
-            'role' => 'admin'
+            'role_id' => 1
         ]);
     }
 }
