@@ -6,7 +6,7 @@ use Closure;
 use Carbon\Carbon;
 use Cache;
 use App\Models\Sensor;
-use App\Models\ReadNutrisi;
+use App\Models\Read;
 
 class LastSensorRead
 {
@@ -21,7 +21,7 @@ class LastSensorRead
     {
         $id = $request->route('sensor')['id'];
         if (!Cache::has('sensor-is-connect-' . $id)) {
-            $read = ReadNutrisi::create(['sensor_id' => $id, 'read_nutrisi' => 0]);
+            $read = Read::create(['sensor_id' => $id, 'read_nutrisi' => 0]);
             $read->created_at = $request->route('sensor')['last_read'];
             $read->save();
         }
