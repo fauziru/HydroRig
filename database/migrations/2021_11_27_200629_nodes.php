@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSensorTable extends Migration
+class Nodes extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,18 @@ class CreateSensorTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('sensors')) {
-            Schema::create('sensors', function (Blueprint $table) {
+        //
+        if (!Schema::hasTable('nodes')) {
+            Schema::create('nodes', function (Blueprint $table) {
                 $table->id();
                 $table->uuid('uuid')->nullable()->default(null);
-                $table->bigInteger('node_id')->unsigned()->nullable();
-                $table->string('name_sensor')->nullable();
-                $table->json('threshold')->nullable();
+                $table->string('name_node')->nullable();
+                $table->double('lat')->nullable();
+                $table->double('lng')->nullable();
+                $table->boolean('konektivitas')->nullable()->default(FALSE);
+                $table->tinyInteger('status')->nullable()->default(FALSE);
                 $table->string('created_by');
                 $table->string('updated_by')->nullable();
-                $table->timestamp('last_read')->nullable();
                 $table->timestamps();
             });
         }
@@ -35,6 +37,7 @@ class CreateSensorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sensor');
+        //
+        Schema::dropIfExists('nodes');
     }
 }

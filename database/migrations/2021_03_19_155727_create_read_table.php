@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSettings extends Migration
+class CreateReadTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateSettings extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('settings')) {
-            Schema::create('settings', function (Blueprint $table) {
+        if (!Schema::hasTable('reads')) {
+            Schema::create('reads', function (Blueprint $table) {
                 $table->id();
-                $table->string('registrasi_key')->nullable();
-                $table->string('api_key')->nullable();
-                $table->string('updated_by')->nullable();
+                $table->bigInteger('sensor_id')->unsigned()->nullable();
+                $table->decimal('read', 5, 0)->nullable();
                 $table->timestamps();
             });
         }
@@ -31,6 +30,6 @@ class CreateSettings extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('settings');
+        Schema::dropIfExists('read');
     }
 }
