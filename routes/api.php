@@ -36,6 +36,15 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('sensor/{page}', 'Api\NotificationController@sensorpaginate');
             Route::get('activity/{page}', 'Api\NotificationController@adminpaginate');
         });
+
+        // node
+        Route::prefix('node')->group(function () {
+            Route::get('/', 'Api\NodeController@index');
+            Route::post('/', 'Api\NodeController@store');
+            Route::put('/{node}', 'Api\NodeController@update');
+            Route::delete('/{node}', 'Api\NodeController@destroy');
+        });
+
         // sensor
         Route::prefix('sensor')->group(function () {
             Route::get('option', 'Api\SensorController@widget');
@@ -48,8 +57,8 @@ Route::group(['prefix' => 'v1'], function () {
         });
         // reader sensor route
         Route::prefix('sensor-nutrisi')->group(function () {
-            Route::get('detail/{sensor}/{filter}/{from?}/{to?}', 'Api\ReadNutrisiController@showDetail');
-            Route::get('widget/{sensor}', 'Api\ReadNutrisiController@showWidget');
+            Route::get('detail/{sensor}/{filter}/{from?}/{to?}', 'Api\ReadController@showDetail');
+            Route::get('widget/{sensor}', 'Api\ReadController@showWidget');
         });
         // user
         Route::prefix('user')->group(function () {
@@ -64,7 +73,7 @@ Route::group(['prefix' => 'v1'], function () {
         });
     });
 
-    Route::get('sensor-nutrisi/{sensor}/read/{read}', 'Api\ReadNutrisiController@store')->middleware('last_read', 'api_key');
+    Route::get('sensor-nutrisi/{sensor}/read/{read}', 'Api\ReadController@store')->middleware('last_read', 'api_key');
 
     // for auth user only
     Route::group(['middleware' => 'auth:api'], function(){
