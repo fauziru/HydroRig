@@ -2,16 +2,22 @@
 
 namespace App\Models;
 
+use App\Traits\Uuid;
+use App\Traits\Blameable;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Contracts\Activity;
 
 class Sensor extends Model
 {
-    protected $table = 'sensor';
+    use Uuid, LogsActivity, Blameable;
 
-    protected $fillable = ['min_nutrisi', 'konektivitas', 'name_sensor'];
+    protected $table = 'sensors';
 
-    public function readNutrisi()
+    protected $fillable = ['name_sensor', 'threshold', 'node_id'];
+
+    public function read()
     {
-        return $this->hasMany('App\Models\ReadNutrisi')->orderBy('id', 'desc');
+        return $this->hasMany('App\Models\Read')->orderBy('id', 'desc');
     }
 }
