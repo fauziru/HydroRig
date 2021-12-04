@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\ReadNutrisi;
+use App\Models\Read;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -17,9 +17,9 @@ use Illuminate\Support\Str;
 |
 */
 
-$factory->define(ReadNutrisi::class, function (Faker $faker) {
+$factory->define(Read::class, function (Faker $faker) {
     return [
         'sensor_id' => 1,
-        'read_nutrisi' => rand(1,1000)
+        'read' => rand(1,1000)
     ];
 });
