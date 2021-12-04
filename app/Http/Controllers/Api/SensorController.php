@@ -11,7 +11,6 @@ use Cache;
 
 class SensorController extends APIBaseController
 {
-    use AdminActivityTrait;
 
     public function index()
     {
@@ -23,7 +22,7 @@ class SensorController extends APIBaseController
     {
         try {
             $sensor = Sensor::create($request->only(['name_sensor', 'min_nutrisi']));
-            $this->sendNotif('menambahkan sensor baru', '/sensor'.'/'.$sensor->id);
+            // $this->sendNotif('menambahkan sensor baru', '/sensor'.'/'.$sensor->id);
             return $this->sendResponse(new SensorResource($sensor));
         } catch (\Throwable $th) {
             $sensor->delete();
@@ -36,14 +35,14 @@ class SensorController extends APIBaseController
         $sensor->name_sensor = $request->name_sensor;
         $sensor->min_nutrisi = $request->min_nutrisi;
         $sensor->save();
-        $this->sendNotif('mengubah data sensor '.$sensor->name_sensor, '/sensor'.'/'.$sensor->id);
+        // $this->sendNotif('mengubah data sensor '.$sensor->name_sensor, '/sensor'.'/'.$sensor->id);
         return $this->sendResponse(new SensorResource($sensor),'edit data successfull');
     }
 
     public function destroy(Sensor $sensor)
     {
         $sensor->delete();
-        $this->sendNotif('menghapus sensor '.$sensor->name_sensor);
+        // $this->sendNotif('menghapus sensor '.$sensor->name_sensor);
         return $this->sendResponse([], 'deleted successfull');
     }
 
