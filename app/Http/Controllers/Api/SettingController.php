@@ -8,7 +8,6 @@ use App\Models\Setting;
 
 class SettingController extends APIBaseController
 {
-    use AdminActivityTrait;
 
     protected $settings;
 
@@ -33,7 +32,7 @@ class SettingController extends APIBaseController
         if(!in_array($type, $generateAble)) return $this->sendError('Generate gagal', 500);
         $this->settings[$type] = \Illuminate\Support\Str::random(32);
         $this->settings->save();
-        $this->sendNotif('mengenerate kode baru '.$arr[$type]['title'], '/setting'.'/'.$arr[$type]['link']);
+        // $this->sendNotif('mengenerate kode baru '.$arr[$type]['title'], '/setting'.'/'.$arr[$type]['link']);
         return $this->sendResponse($this->settings[$type]);
     }
 }
