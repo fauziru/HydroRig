@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
-use App\Models\ReadNutrisi;
+use App\Models\Read;
 
 class RealtimeDataSensor implements ShouldBroadcast
 {
@@ -22,7 +22,7 @@ class RealtimeDataSensor implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(ReadNutrisi $data, $id)
+    public function __construct(Read $data, $id)
     {
         $this->data = $data;
         $this->sensorId = $id;
