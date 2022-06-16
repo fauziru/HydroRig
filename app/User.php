@@ -3,14 +3,15 @@
 namespace App;
 
 use App\Traits\Uuid;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use NotificationChannels\WebPush\HasPushSubscriptions;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, Uuid;
+    use HasApiTokens, Notifiable, Uuid, HasPushSubscriptions;
 
     /**
      * The attributes that are mass assignable.
@@ -37,6 +38,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_online' => 'boolean'
     ];
 
     public function receivesBroadcastNotificationsOn()
@@ -44,8 +46,19 @@ class User extends Authenticatable
         return 'App.User.'.$this->uuid;
     }
 
-    public function kelurahan()
+    public function role()
     {
-        return $this->belongsTo('App\Models\Kelurahan','kelurahan_id','id');
+        return $this->belongsTo('App\Models\Role','role_id','id');
+    }
+
+    public function getIsSubscribeAttribute()
+    {
+        $subs = $this->pushSubscriptions();
+        return $subs->count() > 0;
+    }
+
+    public function resolveRouteBinding($value, $field = NULL)
+    {
+        return $this->where('uuid', $value)->first() ?? abort(404);
     }
 }

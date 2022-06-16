@@ -12,11 +12,15 @@ use Illuminate\Support\Facades\Broadcast;
 | used to check if an authenticated user can listen to the channel.
 |
 */
- Broadcast::channel('events', function ($user) {
-     return true;
- });
+Broadcast::channel('events', function ($user) {
+    return true;
+});
 
- Broadcast::channel('read.sensor.{id}', function ($id) {
+Broadcast::channel('updateUserStatus', function ($user) {
+    return true;
+});
+
+Broadcast::channel('read.sensor.{id}', function ($id) {
     return true;
 });
 

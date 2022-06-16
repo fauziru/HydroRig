@@ -22,9 +22,9 @@ class SecretKey
             'secret' => 'required',
         ]);
 
-        if ($validator->fails()) return response()->json(['Secret Key is required']);
+        if ($validator->fails()) return response()->json(['Secret Key is required'], 400);
 
-        if ($request->secret != $settings->api_key) return response()->json(['Secret Key is not valid']);
+        if ($request->secret != $settings->api_key) return response()->json(['Secret Key is not valid'], 404);
 
         return $next($request);
     }

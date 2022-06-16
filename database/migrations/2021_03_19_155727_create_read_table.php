@@ -17,7 +17,7 @@ class CreateReadTable extends Migration
             Schema::create('reads', function (Blueprint $table) {
                 $table->id();
                 $table->bigInteger('sensor_id')->unsigned()->nullable();
-                $table->decimal('read', 5, 0)->nullable();
+                $table->decimal('read', 11, 0)->nullable();
                 $table->timestamps();
             });
         }
@@ -30,6 +30,6 @@ class CreateReadTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('read');
+        Schema::dropIfExists('reads');
     }
 }

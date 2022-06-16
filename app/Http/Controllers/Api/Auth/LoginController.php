@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 use Laravel\Passport\Client;
 use Laravel\Passport\HasApiTokens;
 use App\User;
+use App\Events\UpdateUserStatus;
+use App\Http\Resources\User as UserResource;
 
 class LoginController extends APIBaseController
 {
@@ -32,12 +34,17 @@ class LoginController extends APIBaseController
         $authUser = User::where('email', $request->email)->first();
         
         // cek validasi
-        if ($validator->fails()) return $this->sendError($validator->errors(), 401);
+        if ($validator->fails()) return $this->sendError($validator->errors(), 400);
         // cek email tidak terdaftar
         if(!$authUser) return $this->sendError('Email belum terdaftar', 401);
         // cek kecocokan email dan password
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             // jika login berhasil
+            $user = Auth::user(); 
+            $user->last_seen = (new \DateTime())->format("Y-m-d H:i:s");
+            $user->is_online = TRUE;
+            $user->save();
+            event(new UpdateUserStatus(new UserResource($user)));
             return $this->issueToken($request, 'password');
             // return $this->sendAuthSuccess($payload, $request->email, 'Percobaan masuk berhasil');
         } else {
@@ -55,9 +62,14 @@ class LoginController extends APIBaseController
     }
 
     public function logoutApi(){
+        $user = Auth::user(); 
+        $user->last_seen = (new \DateTime())->format("Y-m-d H:i:s");
+        $user->is_online = FALSE;
+        $user->save();
         $token = Auth::user()->token();
         $token->revoke();
         $response = ['message' => 'You have been successfully logged out!'];
+        event(new UpdateUserStatus(new UserResource($user)));
         return response($response, 200);
     }  
 }

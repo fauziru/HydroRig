@@ -28,6 +28,13 @@ class Node extends Model
         return $this->hasManyThrough('App\Models\Read', 'App\Models\Sensor', 'node_id', 'sensor_id');
     }
 
+    public function getLastRead()
+    {
+        $data = $this->hasMany('App\Models\Sensor')->where('node_id', $this->id)->get();
+
+        return $data;
+    }
+
     public function resolveRouteBinding($value, $field = NULL)
     {
         return $this->where('uuid', $value)->first() ?? abort(404);

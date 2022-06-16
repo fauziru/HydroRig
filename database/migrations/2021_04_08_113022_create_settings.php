@@ -18,6 +18,9 @@ class CreateSettings extends Migration
                 $table->id();
                 $table->string('registrasi_key')->nullable();
                 $table->string('api_key')->nullable();
+                $table->bigInteger('layout_id')->unsigned()->nullable();
+                $table->string('version')->nullable();
+                $table->boolean('is_maintenance')->nullable();
                 $table->string('updated_by')->nullable();
                 $table->timestamps();
             });

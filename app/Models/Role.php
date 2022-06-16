@@ -29,4 +29,9 @@ class Role extends Model
         $activity->log_name = "Role";
         $activity->description = "activity.logs.role.{$eventName}";
     }
+
+    public function user()
+    {
+        return $this->hasMany('App\User');
+    }
 }

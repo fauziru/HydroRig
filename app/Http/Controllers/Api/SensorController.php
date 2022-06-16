@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\APIBaseController;
+use App\Events\UpdateSensor;
+use App\Jobs\QueueUserNotificationsJob;
 use Illuminate\Http\Request;
 use App\Models\Sensor;
 use App\Http\Resources\Sensor as SensorResource;
@@ -12,17 +13,17 @@ use Cache;
 class SensorController extends APIBaseController
 {
 
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         $sensors = SensorResource::collection(Sensor::all());
         return $this->sendResponse($sensors);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
+        $sensor = Sensor::create($request->only(['name_sensor', 'min_nutrisi']));
         try {
-            $sensor = Sensor::create($request->only(['name_sensor', 'min_nutrisi']));
-            // $this->sendNotif('menambahkan sensor baru', '/sensor'.'/'.$sensor->id);
+            event(new UpdateSensor(new SensorResource($sensor)));
             return $this->sendResponse(new SensorResource($sensor));
         } catch (\Throwable $th) {
             $sensor->delete();
@@ -30,34 +31,34 @@ class SensorController extends APIBaseController
         }
     }
 
-    public function put(Sensor $sensor, Request $request)
+    public function put(Sensor $sensor, Request $request): \Illuminate\Http\JsonResponse
     {
         $sensor->name_sensor = $request->name_sensor;
-        $sensor->min_nutrisi = $request->min_nutrisi;
+        $sensor->threshold = json_encode($request->batas);
         $sensor->save();
-        // $this->sendNotif('mengubah data sensor '.$sensor->name_sensor, '/sensor'.'/'.$sensor->id);
+        event(new UpdateSensor(new SensorResource($sensor)));
+        dispatch(new QueueUserNotificationsJob('memperbarui sensor baru', '/sensor/'.$sensor->uuid));
         return $this->sendResponse(new SensorResource($sensor),'edit data successfull');
     }
 
-    public function destroy(Sensor $sensor)
+    public function destroy(Sensor $sensor): \Illuminate\Http\JsonResponse
     {
         $sensor->delete();
-        // $this->sendNotif('menghapus sensor '.$sensor->name_sensor);
         return $this->sendResponse([], 'deleted successfull');
     }
 
-    public function connectStatus(Sensor $sensor)
+    public function connectStatus(Sensor $sensor): \Illuminate\Http\JsonResponse
     {
         $status = Cache::has('sensor-is-connect-' . $sensor->id) ? 1 : 0;
         $lastRead = $sensor->last_read;
         return $this->sendResponse(['status'=> $status, 'lastRead'=> $lastRead]);
     }
 
-    public function connectStatusAll()
+    public function connectStatusAll(): \Illuminate\Http\JsonResponse
     {
         $onlineStatuss = [];
-        $sensors = Sensor::all(['id']);
-        foreach ($sensors as $sensor) array_push($onlineStatuss, Cache::has('sensor-is-connect-' . $sensor->id) ? 1 : 0);
+        $sensors = Sensor::all(['node_id']);
+        foreach ($sensors as $sensor) array_push($onlineStatuss, Cache::has('node-is-connect-' . $sensor->node_id) ? 1 : 0);
         $result = [
             "online" => count(array_filter($onlineStatuss, function($val) {return $val == 1;})),
             "from" => count($onlineStatuss)
@@ -65,7 +66,7 @@ class SensorController extends APIBaseController
         return $this->sendResponse($result);
     }
 
-    public function widget()
+    public function widget(): \Illuminate\Http\JsonResponse
     {
         $sensors = Sensor::select('id', 'name_sensor')->get();
         return $this->sendResponse($sensors);

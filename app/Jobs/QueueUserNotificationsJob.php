@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use App\User;
 use Notification;
 use App\Notifications\AdminActivity;
+use App\Notifications\WebPush;
 use Illuminate\Support\Facades\Auth;
 
 class QueueUserNotificationsJob implements ShouldQueue
@@ -36,10 +37,17 @@ class QueueUserNotificationsJob implements ShouldQueue
      */
     public function handle()
     {
+        $user = Auth::user();
         $item = [
-            'message' => '<span class="primary--text">'.Auth::user()->name.'</span> &mdash; '.$this->message,
+            'message' => '<span class="primary--text">'.$user->name_user.'</span> &mdash; '.$this->message,
             'link' => $this->link
         ];
         Notification::send(User::all(), new AdminActivity($item));
+        $item = [
+            'title' => 'Admin',
+            'body' => $user->name_user.', '.$this->message,
+            'link' => $this->link
+        ];
+        Notification::send($user, new WebPush($item));
     }
 }

@@ -23,15 +23,10 @@ class CreateUsersTable extends Migration
                 $table->string('adress')->nullable();
                 $table->string('profile_image')->nullable();
                 $table->timestamp('email_verified_at')->nullable();
+                $table->timestamp('last_seen')->nullable();
                 $table->string('password');
                 $table->bigInteger('role_id')->unsigned();
-                $table->boolean('last_activity')->nullable();
-                $table->text('jwt_token')->nullable();
-                $table->rememberToken()->nullable();
-                $table->bigInteger('kelurahan_id')->unsigned()->nullable();
-                $table->bigInteger('kecamatan_id')->unsigned()->nullable();
-                $table->bigInteger('kabupaten_id')->unsigned()->nullable();
-                $table->bigInteger('provinsi_id')->unsigned()->nullable();
+                $table->boolean('is_online')->nullable();
                 $table->timestamps();
             });
         }
