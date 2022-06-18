@@ -66,12 +66,20 @@ class NotificationController extends APIBaseController
 
     public function tesPushNotification()
     {
-        $item = [
-            'title' => 'Selamat datang di HydroFarm 😄😄😄',
-            'body' => 'Mulai sekarang, notifikasi akan masuk ke sistem anda'
+        // $item = [
+        //     'title' => 'Selamat datang di HydroFarm 😄😄😄',
+        //     'body' => 'Mulai sekarang, notifikasi akan masuk ke sistem anda'
+        // ];
+        // $user = \App\User::all();
+        // Notification::send($user, new WebPush($item));
+        $usersReceive = \App\User::all();
+        $sender = Auth::user();
+        $itemNotif2 = [
+            'title' => 'Admin',
+            'body' => $sender->name_user.', '.$this->message,
+            'link' => $this->link
         ];
-        $user = \App\User::all();
-        Notification::send($user, new WebPush($item));
+        Notification::send($usersReceive, new WebPush($itemNotif2));
     }
 
     public function unSubscribePushNotification()
