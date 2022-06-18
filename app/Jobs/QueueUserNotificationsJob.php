@@ -37,7 +37,6 @@ class QueueUserNotificationsJob implements ShouldQueue
      */
     public function handle()
     {
-        $user = Auth::user();
         $item = [
             'message' => '<span class="primary--text">'.$user->name_user.'</span> &mdash; '.$this->message,
             'link' => $this->link
@@ -48,6 +47,6 @@ class QueueUserNotificationsJob implements ShouldQueue
             'body' => $user->name_user.', '.$this->message,
             'link' => $this->link
         ];
-        Notification::send($user, new WebPush($item));
+        Notification::send(User::all(), new WebPush($item));
     }
 }
