@@ -25,8 +25,8 @@ class CreateUsersTable extends Migration
                 $table->timestamp('email_verified_at')->nullable();
                 $table->timestamp('last_seen')->nullable();
                 $table->string('password');
-                $table->bigInteger('role_id')->unsigned();
-                $table->boolean('is_online')->nullable();
+                $table->bigInteger('role_id')->unsigned()->default(2);
+                $table->boolean('is_online')->nullable()->default(1);
                 $table->timestamps();
             });
         }
