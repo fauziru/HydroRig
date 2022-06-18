@@ -37,17 +37,18 @@ class QueueUserNotificationsJob implements ShouldQueue
      */
     public function handle()
     {
-        $user = \App\User::all();
+        $usersReceive = \App\User::all();
+        $sender = Auth::user();
         $item = [
             'message' => '<span class="primary--text">'.$user->name_user.'</span> &mdash; '.$this->message,
             'link' => $this->link
         ];
-        Notification::send(User::all(), new AdminActivity($item));
+        Notification::send($usersReceive, new AdminActivity($item));
         $item = [
             'title' => 'Admin',
-            'body' => $user->name_user.', '.$this->message,
+            'body' => $sender->name_user.', '.$this->message,
             'link' => $this->link
         ];
-        Notification::send($user, new WebPush($item));
+        Notification::send($usersReceive, new WebPush($item));
     }
 }
