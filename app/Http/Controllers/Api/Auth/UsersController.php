@@ -48,8 +48,6 @@ class UsersController extends APIBaseController
     {
         $validator = Validator::make($request->all(), [
             'name_user' => 'required',
-            // 'role' => 'required',
-            // 'phone' => 'required|unique:users|regex:/(0)[0-9]{10}/',
             'email' => 'required|email|unique:users',
             'password' => 'required',
         ]);
@@ -63,8 +61,6 @@ class UsersController extends APIBaseController
 
         $input = $request->all();
         $input['password'] = Hash::make($request['password']);
-        // default user role id 2 (common user)
-        $input['role_id'] = 2;
         $user = User::create($input);
         return $this->issueToken($request, 'password');
     }
