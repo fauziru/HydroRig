@@ -18,7 +18,7 @@ class Setting extends Model
 
     public function layout()
     {
-        return $this->belongsTo('App\Models\layout','layout_id','id');
+        return $this->belongsTo('App\Models\Layout','layout_id','id');
     }
 
     public function tapActivity(Activity $activity, string $eventName)
