@@ -76,7 +76,7 @@ class NotificationController extends APIBaseController
         $sender = Auth::user();
         $itemNotif2 = [
             'title' => 'Admin',
-            'body' => $sender->name_user.', '.$this->message,
+            'body' => $sender->name_user.', '.'ini adalh',
             'link' => $this->link
         ];
         Notification::send($usersReceive, new WebPush($itemNotif2));

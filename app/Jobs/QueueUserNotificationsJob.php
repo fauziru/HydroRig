@@ -40,7 +40,7 @@ class QueueUserNotificationsJob implements ShouldQueue
         $usersReceive = \App\User::all();
         $sender = Auth::user();
         $itemNotif1 = [
-            'message' => '<span class="primary--text">'.$user->name_user.'</span> &mdash; '.$this->message,
+            'message' => '<span class="primary--text">'.$sender->name_user.'</span> &mdash; '.$this->message,
             'link' => $this->link
         ];
         Notification::send($usersReceive, new AdminActivity($itemNotif1));
