@@ -30,9 +30,9 @@ class WebPush extends Notification
             ->icon('/img/icons/android-chrome-512x512.png')
             ->body($this->item['body'])
             ->action('View Action', env('CLIENT_APP_URL'))
-            ->options(['TTL' => 1000]);
+            ->options(['TTL' => 1000])
+            ->badge('/img/icons/badge-152x152.png');
             // ->data(['id' => $notification->id])
-            // ->badge()
             // ->dir()
             // ->image()
             // ->lang()
