@@ -18,9 +18,9 @@ class NodeController extends APIBaseController
 
     protected $sensors = ['tds', 'tds_t', 'temp', 'hum', 'light', 'height'];
 
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        $nodes = NodeResponse::collection(Node::all());
+        $nodes = NodeResponse::collection(Node::with('sensors')->get());
         $setting = Setting::first();
         $file_name = null;
         if ($setting->layout) {
@@ -30,14 +30,14 @@ class NodeController extends APIBaseController
         return $this->sendResponse($response);
     }
 
-    public function show(Node $node)
+    public function show(Node $node): DashboardNodeResponse
     {
         $node->load('sensors');
         $node->sensors->load('read');
         return new DashboardNodeResponse($node);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
 
     {
         try {
@@ -68,7 +68,7 @@ class NodeController extends APIBaseController
             return $this->sendError('Terjadi kesalahan pada server', 500);
         }
     }
-    public function update(Node $node, Request $request)
+    public function update(Node $node, Request $request): \Illuminate\Http\JsonResponse
     {
         // print_r($node->name_node);
         $node->name_node = $request->name_node;
@@ -80,7 +80,7 @@ class NodeController extends APIBaseController
         return $this->sendResponse(new NodeResponse($node));
     }
 
-    public function destroy(Node $node, Request $request)
+    public function destroy(Node $node, Request $request): \Illuminate\Http\JsonResponse
     {
         // print_r($node);
         // delete sensor

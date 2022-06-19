@@ -15,7 +15,7 @@ class SensorController extends APIBaseController
 
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $sensors = SensorResource::collection(Sensor::all());
+        $sensors = SensorResource::collection(Sensor::with('node')->get());
         return $this->sendResponse($sensors);
     }
 

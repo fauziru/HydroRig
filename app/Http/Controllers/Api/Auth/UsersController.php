@@ -28,7 +28,7 @@ class UsersController extends APIBaseController
 
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $users = UserResource::collection(User::where("id", "!=", Auth::user()->id)->get());
+        $users = UserResource::collection(User::where("id", "!=", Auth::user()->id)->with('role')->get());
         return $this->sendResponse($users);
     }
 

@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\LastRead as LastReadResponse; 
+use App\Http\Resources\LastRead as LastReadResponse;
 use Cache;
 
 class NodeResponse extends JsonResource
@@ -24,7 +24,7 @@ class NodeResponse extends JsonResource
             'status' => $this->status,
             'konektivitas' => Cache::has('node-is-connect-' . $this->id) ? 1 : 0,
             'link' => '/dashboard'.'/'.$this->uuid,
-            'last_reads' => LastReadResponse::collection($this->getLastRead())
+            'last_reads' => LastReadResponse::collection($this->sensors)
         ];
     }
 }

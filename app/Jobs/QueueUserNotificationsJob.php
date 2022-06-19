@@ -37,7 +37,7 @@ class QueueUserNotificationsJob implements ShouldQueue
      */
     public function handle()
     {
-        $usersReceive = \App\User::all();
+        $usersReceive = \App\User::select('id')->get();
         $sender = Auth::user();
         $itemNotif1 = [
             'message' => '<span class="primary--text">'.$sender->name_user.'</span> &mdash; '.$this->message,
