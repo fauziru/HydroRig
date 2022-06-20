@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Notifications\WebPush;
 use Notification;
 use Illuminate\Support\Facades\Auth;
+use PhpMqtt\Client\Facades\MQTT;
 
 class NotificationController extends APIBaseController
 {
@@ -80,6 +81,12 @@ class NotificationController extends APIBaseController
             'link' => ''
         ];
         Notification::send($usersReceive, new WebPush($itemNotif2));
+
+        $msg = [
+          'action' => 'delete',
+          'payload' => $sender
+        ];
+        MQTT::publish('channel/events', json_encode($msg));
     }
 
     public function unSubscribePushNotification()
