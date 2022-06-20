@@ -41,7 +41,7 @@ class NotificationController extends APIBaseController
 
     public function sensorpaginate($page)
     {
-        $notification = Auth()->user()->Notifications()->where('type', 'App\Notifications\NutrisiKurang')->paginate(8, ['*'], 'page', $page);
+        $notification = Auth()->user()->Notifications()->where('type', 'App\Notifications\ThresholdReach2')->paginate(8, ['*'], 'page', $page);
         return $this->sendResponse($notification);
     }
 

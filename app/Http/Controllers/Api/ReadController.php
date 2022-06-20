@@ -11,7 +11,6 @@ use App\Models\Node;
 use App\Models\Read;
 use App\User;
 use App\Http\Resources\Sensor as SensorResource;
-use App\Notifications\NutrisiKurang;
 use App\Notifications\ReachThreshold;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -20,22 +19,6 @@ use Notification;
 
 class ReadController extends APIBaseController
 {
-    // public function store1(Sensor $sensor, $read)
-    // {
-    //     // jika dibawah min
-    //     if ($read < $sensor->min_nutrisi){
-    //         $item = [
-    //             'message' => '<span class="primary--text">'.$sensor->name_sensor.'</span> &mdash; Konsentrasi nutrisi pada titik '.$sensor->name_sensor.' dibawah batas minimum!',
-    //             'link' => '/sensor'.'/'.$sensor->id
-    //         ];
-    //         Notification::send(User::all(), new NutrisiKurang($item));
-    //     }
-    //     $readSensor = Read::create(['sensor_id' => $sensor->id,'read_nutrisi' => $read]);
-    //     // event update realtime
-    //     event(new RealtimeDataSensor($readSensor, $sensor->id));
-    //     return $this->sendResponse($readSensor);
-    // }
-
     public function messageSen($tipe): string
     {
         switch ($tipe) {
@@ -64,6 +47,7 @@ class ReadController extends APIBaseController
     public function store(Node $node, Request $request)
     {
         // update cache
+        $users = User::select(['id'])->get();
         $expiresAt = Carbon::now()->addSeconds(3);
         Cache::put('node-is-connect-'.$node->id, true, $expiresAt);
         $node->update(['status' => 1]);
@@ -98,19 +82,14 @@ class ReadController extends APIBaseController
                 $isNotifSent = \Illuminate\Support\Facades\Cache::has($cacheKey);
                 if (!$isNotifSent) {
                     $item = [
+                        'title' => 'Penting!!',
                         'message' => '<span class="primary--text">'.$sensor->name_sensor.'</span> &mdash; '.$this->messageSen($sensor->tipe).' pada titik '.$sensor->name_sensor.$this->messageTh($reachMax),
+                        'body' => $sensor->name_sensor.', '.$this->messageSen($sensor->tipe).' pada titik '.$sensor->name_sensor.$this->messageTh($reachMax),
                         'link' => '/sensor'.'/'.$sensor->uuid
                     ];
                     // notifikasi
-                    Notification::send(User::all(), new NutrisiKurang($item));
-                    $item = [
-                        'body' => '<span class="primary--text">'.$sensor->name_sensor.'</span> &mdash; '.$this->messageSen($sensor->tipe).' pada titik '.$sensor->name_sensor.$this->messageTh($reachMax),
-                        'link' => '/sensor'.'/'.$sensor->uuid,
-                        'title' => 'HydroFarm'
-                    ];
-                    // push notifikasi
-                    Notification::send(User::all(), new ReachThreshold($item));
-                    $expiresAt = Carbon::now()->addMinutes(30);
+                    Notification::send($users, new ReachThreshold($item));
+                    $expiresAt = Carbon::now()->addMinutes(5);
                     \Illuminate\Support\Facades\Cache::put($cacheKey, true, $expiresAt);
                     $node->update(['status' => 0]);
                 }
