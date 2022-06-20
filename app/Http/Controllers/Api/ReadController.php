@@ -97,11 +97,12 @@ class ReadController extends APIBaseController
                 $node->update(['status' => 0]);
             }
             // update sensor
-            event(new UpdateSensor(new SensorResource($sensor)));
+            // event(new UpdateSensor(new SensorResource($sensor)));
             MQTT::publish('events/sensor', json_encode(new SensorResource($sensor)));
         }
         // update node
-        event(new UpdateNode(new NodeResponse($node)));
+        // event(new UpdateNode(new NodeResponse($node)));
+        MQTT::publish('events/node', json_encode(new NodeResponse($node)));
         // MQTT::publish();
         return $request->read;
     }
