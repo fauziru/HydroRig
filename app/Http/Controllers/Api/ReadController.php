@@ -13,6 +13,7 @@ use App\User;
 use App\Http\Resources\Sensor as SensorResource;
 use App\Notifications\ReachThreshold;
 use Illuminate\Support\Facades\DB;
+use PhpMqtt\Client\Facades\MQTT;
 use Carbon\Carbon;
 use Cache;
 use Notification;
