@@ -11,6 +11,7 @@ use App\Http\Resources\NodeResponse as NodeResponse;
 use App\Http\Resources\DashboardResponse as DashboardNodeResponse;
 use Illuminate\Http\Request;
 use App\Jobs\QueueUserNotificationsJob;
+use PhpMqtt\Client\Facades\MQTT;
 
 class NodeController extends APIBaseController
 {
@@ -61,7 +62,8 @@ class NodeController extends APIBaseController
                 $sensor = Sensor::create($arr);
             }
             dispatch(new QueueUserNotificationsJob('menambahkan node baru', '/node/'.$node->uuid));
-            event(new UpdateNode(new NodeResponse($node)));
+            // event(new UpdateNode(new NodeResponse($node)));
+            MQTT::publish('events/UpdateNode', json_encode(new NodeResponse($node)));
             return $this->sendResponse(new NodeResponse($node));
         } catch (\Throwable $th) {
             echo ($th);

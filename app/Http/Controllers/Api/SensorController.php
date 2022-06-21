@@ -7,6 +7,7 @@ use App\Jobs\QueueUserNotificationsJob;
 use Illuminate\Http\Request;
 use App\Models\Sensor;
 use App\Http\Resources\Sensor as SensorResource;
+use PhpMqtt\Client\Facades\MQTT;
 use Cache;
 
 
@@ -36,7 +37,8 @@ class SensorController extends APIBaseController
         $sensor->name_sensor = $request->name_sensor;
         $sensor->threshold = json_encode($request->batas);
         $sensor->save();
-        event(new UpdateSensor(new SensorResource($sensor)));
+        // event(new UpdateSensor(new SensorResource($sensor)));
+        MQTT::publish('events/UpdateSensor', json_encode(new SensorResource($sensor)));
         dispatch(new QueueUserNotificationsJob('memperbarui sensor baru', '/sensor/'.$sensor->uuid));
         return $this->sendResponse(new SensorResource($sensor),'edit data successfull');
     }
