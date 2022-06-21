@@ -71,7 +71,7 @@ class ReadController extends APIBaseController
             $reachMin = $readValue < json_decode($sensor->threshold)->min;
             $reachMax = $readValue > json_decode($sensor->threshold)->max;
 
-            Sensor::where('id', $sensor->id)->update([
+            $sensor->update([
                 'last_read' => $readValue,
                 'last_read_time' => (new \DateTime())->format("Y-m-d H:i:s")
             ]);
@@ -84,8 +84,8 @@ class ReadController extends APIBaseController
                 if (!$isNotifSent) {
                     $item = [
                         'title' => 'Penting!!',
-                        'message' => '<span class="primary--text">'.$sensor->name_sensor.'</span> &mdash; '.$this->messageSen($sensor->tipe).' pada titik '.$sensor->name_sensor.$this->messageTh($reachMax),
-                        'body' => $sensor->name_sensor.', '.$this->messageSen($sensor->tipe).' pada titik '.$sensor->name_sensor.$this->messageTh($reachMax),
+                        'message' => '<span class="primary--text">'.$sensor->name_sensor.'</span> &mdash; '.$this->messageSen($sensor->tipe).' nilai = '.$readValue.' pada titik '.$sensor->name_sensor.$this->messageTh($reachMax),
+                        'body' => $sensor->name_sensor.', '.$this->messageSen($sensor->tipe).' nilai = '.$readValue.' pada titik '.$sensor->name_sensor.$this->messageTh($reachMax),
                         'link' => '/sensor'.'/'.$sensor->uuid
                     ];
                     // notifikasi
@@ -104,7 +104,7 @@ class ReadController extends APIBaseController
         // event(new UpdateNode(new NodeResponse($node)));
         MQTT::publish('events/UpdateNode', json_encode(new NodeResponse($node)));
         // MQTT::publish();
-        return $request->read;
+        // return $request->read;
     }
 
     public function showWidget(Sensor $sensor): \Illuminate\Http\JsonResponse
