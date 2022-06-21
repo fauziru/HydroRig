@@ -85,7 +85,7 @@ class ReachThreshold extends Notification implements ShouldBroadcast
             ->body($this->item['body'])
             ->action('View Action', env('CLIENT_APP_URL').$this->item['link'])
             ->options(['TTL' => 1000])
-            ->badge('./img/icons/badge-24x24.png');
+            ->badge('./img/icons/android-chrome-maskable-512x512.png');
         // ->data(['id' => $notification->id])
         // ->badge()
         // ->dir()
