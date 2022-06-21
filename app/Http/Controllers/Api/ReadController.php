@@ -49,7 +49,7 @@ class ReadController extends APIBaseController
     {
         // update cache
         $users = User::select(['id'])->get();
-        $expiresAt = Carbon::now()->addSeconds(3);
+        $expiresAt = Carbon::now()->addSeconds(5);
         Cache::put('node-is-connect-'.$node->id, true, $expiresAt);
         $node->update(['status' => 1]);
         $sensors = $node->sensors;
