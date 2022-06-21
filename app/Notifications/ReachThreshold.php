@@ -69,7 +69,7 @@ class ReachThreshold extends Notification implements ShouldBroadcast
     public function toBroadcast($notifiable): BroadcastMessage
     {
         return new BroadcastMessage([
-            'payload' => [
+            'data' => [
                 'data' => $this->item['message'],
                 'created_at' => Carbon::now(),
                 'link' => $this->item['link']
