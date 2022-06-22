@@ -17,7 +17,7 @@ class CreateReadTable extends Migration
             Schema::create('reads', function (Blueprint $table) {
                 $table->id();
                 $table->bigInteger('sensor_id')->unsigned()->nullable();
-                $table->decimal('read', 11, 0)->nullable();
+                $table->decimal('read', 6, 1)->nullable();
                 $table->timestamps();
             });
         }
