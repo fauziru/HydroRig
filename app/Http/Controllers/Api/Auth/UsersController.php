@@ -129,6 +129,15 @@ class UsersController extends APIBaseController
         return $this->sendResponse($user);
     }
 
+    public function downgradeAdmin(User $user): \Illuminate\Http\JsonResponse
+    {
+        // jika sudah user maka beri resoonse error
+        if ($user->role_id == 2) return $this->sendError('user tidak dapat didowngrade karena sudah bukan admin', 500);
+        $user->update(['role_id' => 2]);
+        event(new UpdateUserStatus(new UserResource($user)));
+        return $this->sendResponse($user);
+    }
+
     public function cekEmail(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
