@@ -146,26 +146,16 @@ class ReadController extends APIBaseController
 
         if (!$filterArray[$filter]) return $this->sendError([], 404);
 
-        if ($filter !== 'date') {
-            $dataReadSensor = Read::selectRaw("CONVERT((min(created_at) div {$filterArray[$filter]})*{$filterArray[$filter]}, datetime) as time, ROUND(AVG(reads.read), 0) avg_read")
-                ->where('sensor_id', '=', $sensor->id)
-                ->whereDate('created_at', '>', Carbon::now()->subDays($filterArray[$filter]))
-                ->groupByRaw("created_at div {$filterArray[$filter]}")
-                ->get();
-            return $this->sendResponse($this->wrapDataTwo($dataReadSensor, $sensor));
-        } else {
-            $first = new Carbon($to);
-            $second = new Carbon($from);
-            $diffDay = $first->diff($second)->days;
-            $interval = $this->SwitchInterval($diffDay);
-            
-            $dataReadSensor = Read::selectRaw("CONVERT((min(created_at) div {$interval})*{$interval}, datetime) as time, ROUND(AVG(reads.read), 0) avg_read")
-                ->where('sensor_id', '=', $sensor->id)
-                ->whereBetween('created_at', [$from, $to])
-                ->groupByRaw("created_at div {$interval}")
-                ->get();
-            return $this->sendResponse($this->wrapDataTwo($dataReadSensor, $sensor));
-        }
+        $filter === 'date'
+            ? $dataReadSensor = DB::table('reads')
+                    ->where('sensor_id', '=', $sensor->id)
+                    ->whereBetween('created_at', [$from, $to])
+                    ->get()
+            : $dataReadSensor = DB::table('reads')
+                    ->where('sensor_id', '=', $sensor->id)
+                    ->whereDate('created_at', '>', Carbon::now()->subDays($filterArray[$filter]))
+                    ->get();
+        return $this->sendResponse($this->wrapData($dataReadSensor, $sensor));
     }
 
     private function wrapDataTwo($ReadSensors, $sensor): array
