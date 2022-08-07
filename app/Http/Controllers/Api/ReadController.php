@@ -114,6 +114,33 @@ class ReadController extends APIBaseController
 
     public function showDetail(Sensor $sensor, $filter, $from = null, $to = null): \Illuminate\Http\JsonResponse
     {
+        // review later
+    //     $filterArray = ['today' => 1, 'this-week' => 8, 'this-month' => 31, 'date' => 1];
+    //     $filterInterval = ['today' => 200, 'this-week' => 60000, 'this-month' => 1440000, 'date' => 1];
+
+    //     if (!$filterArray[$filter]) return $this->sendError([], 404);
+
+    //     if ($filter !== 'date') {
+    //         $dataReadSensor = Read::selectRaw("CONVERT((min(created_at) div {$filterArray[$filter]})*{$filterArray[$filter]}, datetime) as time, ROUND(AVG(reads.read), 0) avg_read")
+    //             ->where('sensor_id', '=', $sensor->id)
+    //             ->whereDate('created_at', '>', Carbon::now()->subDays($filterArray[$filter]))
+    //             ->groupByRaw("created_at div {$filterArray[$filter]}")
+    //             ->get();
+    //         return $this->sendResponse($this->wrapDataTwo($dataReadSensor, $sensor));
+    //     } else {
+    //         $first = new Carbon($to);
+    //         $second = new Carbon($from);
+    //         $diffDay = $first->diff($second)->days;
+    //         $interval = $this->SwitchInterval($diffDay);
+            
+    //         $dataReadSensor = Read::selectRaw("CONVERT((min(created_at) div {$interval})*{$interval}, datetime) as time, ROUND(AVG(reads.read), 0) avg_read")
+    //             ->where('sensor_id', '=', $sensor->id)
+    //             ->whereBetween('created_at', [$from, $to])
+    //             ->groupByRaw("created_at div {$interval}")
+    //             ->get();
+    //         return $this->sendResponse($this->wrapDataTwo($dataReadSensor, $sensor));
+    //     }
+    // }
         $filterArray = ['today' => 1, 'this-week' => 8, 'this-month' => 31, 'date' => 1];
 
         if (!$filterArray[$filter]) return $this->sendError([], 404);
