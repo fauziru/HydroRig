@@ -142,20 +142,47 @@ class ReadController extends APIBaseController
     //     }
     // }
         $filterArray = ['today' => 1, 'this-week' => 8, 'this-month' => 31, 'date' => 1];
+        $filterInterval = ['today' => 200, 'this-week' => 60000, 'this-month' => 1440000, 'date' => 1];
 
         if (!$filterArray[$filter]) return $this->sendError([], 404);
 
-        $filter === 'date'
-            ? $dataReadSensor = DB::table('reads')
-                    ->where('sensor_id', '=', $sensor->id)
-                    ->whereBetween('created_at', [$from, $to])
-                    ->get()
-            : $dataReadSensor = DB::table('reads')
-                    ->where('sensor_id', '=', $sensor->id)
-                    ->whereDate('created_at', '>', Carbon::now()->subDays($filterArray[$filter]))
-                    ->get();
+        if ($filter !== 'date') {
+            $dataReadSensor = Read::selectRaw("CONVERT((min(created_at) div {$filterArray[$filter]})*{$filterArray[$filter]}, datetime) as time, ROUND(AVG(reads.read), 0) avg_read")
+                ->where('sensor_id', '=', $sensor->id)
+                ->whereDate('created_at', '>', Carbon::now()->subDays($filterArray[$filter]))
+                ->groupByRaw("created_at div {$filterArray[$filter]}")
+                ->get();
+            return $this->sendResponse($this->wrapDataTwo($dataReadSensor, $sensor));
+        } else {
+            $first = new Carbon($to);
+            $second = new Carbon($from);
+            $diffDay = $first->diff($second)->days;
+            $interval = $this->SwitchInterval($diffDay);
+            
+            $dataReadSensor = Read::selectRaw("CONVERT((min(created_at) div {$interval})*{$interval}, datetime) as time, ROUND(AVG(reads.read), 0) avg_read")
+                ->where('sensor_id', '=', $sensor->id)
+                ->whereBetween('created_at', [$from, $to])
+                ->groupByRaw("created_at div {$interval}")
+                ->get();
+            return $this->sendResponse($this->wrapDataTwo($dataReadSensor, $sensor));
+        }
+    }
 
-        return $this->sendResponse($this->wrapData($dataReadSensor, $sensor));
+    private function wrapDataTwo($ReadSensors, $sensor): array
+    {
+        $arrSeries = [];
+        $arrCategories = [];
+
+        foreach ($ReadSensors as $read){
+            array_push($arrSeries, $read->avg_read);
+            array_push($arrCategories, Carbon::parse($read->time)->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s'));
+        }
+
+        return $item = [
+            'sensor_data' => new SensorResource($sensor),
+            'series_data' => $arrSeries,
+            'categories_data' => $arrCategories
+        ];
     }
 
     private function wrapData($ReadSensors, $sensor): array
@@ -173,5 +200,12 @@ class ReadController extends APIBaseController
             'series_data' => $arrSeries,
             'categories_data' => $arrCategories
         ];
+    }
+
+    private function SwitchInterval($diffDay)
+    {
+        if($diffDay == 1) return 200;
+        if($diffDay <= 7) return 60000;
+        return 1440000;
     }
 }
